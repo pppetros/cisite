@@ -1,45 +1,32 @@
-
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Login extends CI_Controller {
 
-	public function index()
+	public function is_logged_in() 
 	{
-		
-		//$this->load->helper('form');
-		if ( $this->session->userdata('is_logged_in') == true ) {
-			redirect('site/members_area');
+		$is_logged_in = $this->session->userdata('is_logged_in');
+		if (( ! isset($is_logged_in) ) || ( $is_logged_in != true )) 
+		{
+	 		return false;
 		}
-
-		$data['main_content'] = 'login_form';
-		$this->load->view('includes/template', $data);
+		else 
+		{
+			return true;
+		}
 	}
 
 	public function validate_login()
 	{
-		$this->load->model('membership_model');
 		$query = $this->membership_model->validate();
-
 		if($query)
 		{
 			$data = array(
 				'username' => $this->input->post('username'),
 				'is_logged_in' => true
 			);
-			
 			$this->session->set_userdata( $data );
-			redirect('site/members_area');
 		}
-		else
-		{
-			$this->index();
-		}
-	}
-
-	public function signup()
-	{	
-		$data['main_content'] = 'signup_form';
-		$this->load->view('includes/template', $data);
+		redirect('/');
 	}
 
 	public function create_member()
@@ -49,28 +36,32 @@ class Login extends CI_Controller {
 		$this->form_validation->set_rules('first_name', 'Name', 'trim');
 		$this->form_validation->set_rules('last_name', 'Last Name', 'trim');
 		$this->form_validation->set_rules('email_address', 'Email Address', 'trim|required|valid_email|is_unique[members.email]');
-		$this->form_validation->set_rules('username', 'Username', 'trim|required|min_length[3]|is_unique[members.username]');
-		$this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[3]|max_length[32]');
-		$this->form_validation->set_rules('password2', 'Password Confirmation', 'trim|required|matches[password]');
+		$this->form_validation->set_rules('user', 'Username', 'trim|required|min_length[3]|is_unique[members.username]');
+		$this->form_validation->set_rules('pass', 'Password', 'trim|required|min_length[3]|max_length[32]');
+		$this->form_validation->set_rules('pass2', 'Password Confirmation', 'trim|required|matches[pass]');
+		$this->form_validation->set_rules('group', 'Κλάδος', 'trim');
+		$this->form_validation->set_rules('years', 'Έτη υπηρεσίας', 'trim|is_natural_no_zero|less_than[26]');
 		
 		if($this->form_validation->run() == FALSE)
-			{
-				$data['main_content'] = 'signup_form';
+			{			
+				$data['login_content']= 'login_form';
+				$data['banner_content'] = 'signup_form';
 				$this->load->view('includes/template', $data);
 			}
 		else
 		{
-			$this->load->model('membership_model');
-
 			if($q = $this->membership_model->create_member())
-			{
-				$data['main_content'] = 'signup_successful';
-				$data['lastid'] = $q;
+			{				
+				$data['login_content']= 'login_form';
+				$data['banner_content'] = 'signup_successful';
+				//$data['lastid'] = $q;
 				$this->load->view('includes/template', $data);
 			}
 			else
 			{
-				$this->load->view('signup_form');		
+				$data['login_content']= 'login_form';
+				$data['banner_content'] = 'signup_dberror';
+				$this->load->view('includes/template', $data);		
 			}
 		}
 

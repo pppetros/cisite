@@ -1,0 +1,25 @@
+* {
+	font-family: Arial;
+	font-size: 12px;
+}
+
+#banner table {
+	border-collapse: collapse;
+}
+
+#banner td, th {
+	border: 1px solid #666666;
+	padding:  4px;
+}
+
+#banner div {
+	margin: 4px;
+}
+
+#banner .sort_asc:after {
+	content: "▲";
+}
+
+#banner .sort_desc:after {
+	content: "▼";
+}

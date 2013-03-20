@@ -2,7 +2,8 @@
 
 class Membership_model extends CI_Model {
 
-	public function validate() {
+	public function validate() 
+	{
 		$this->db->where('username', $this->input->post('username'));
 		$this->db->where('password', md5($this->input->post('password')));
 
@@ -23,8 +24,10 @@ class Membership_model extends CI_Model {
 			'firstnm' => $this->input->post('first_name'),
 			'lastnm' => $this->input->post('last_name'),
 			'email' => $this->input->post('email_address'),			
-			'username' => $this->input->post('username'),
-			'password' => md5($this->input->post('password'))						
+			'username' => $this->input->post('user'),
+			'password' => md5($this->input->post('pass')),
+			'edu_exper' => $this->input->post('years'),
+			'group' => $this->input->post('group')						
 		);
 
 		if($insert = $this->db->insert('members', $new_member_insert_data)) 
@@ -38,5 +41,5 @@ class Membership_model extends CI_Model {
 	}
 }
 
-/* End of file validation_model.php */
-/* Location: ./application/controllers/validation_model.php */
+/* End of file membership_model.php */
+/* Location: ./application/models/membership_model.php */

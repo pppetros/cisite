@@ -1,1 +1,1 @@
-<h3>You signed up successfully! Now you can <?php echo anchor('/', 'LOGIN');?>.</h3>
+<h3>You signed up successfully! You can now LOGIN.</h3>
